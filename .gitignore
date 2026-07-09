@@ -1,0 +1,23 @@
+# Raw data
+data/zips_raw/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Jupyter / Colab 
+.ipynb_checkpoints/
+
+# OS / editor 
+.DS_Store
+Thumbs.db
+.vscode/settings.json
+
+# Misc
+*.log
+.env
