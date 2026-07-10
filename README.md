@@ -1,15 +1,10 @@
 # Human Activity Recognition with a Hidden Markov Model
 
 **Formative 2 — Hidden Markov Models**
-Individual submission.
 
 ## Overview
 
-This project builds a Hidden Markov Model (HMM) that infers a person's
-activity — **standing, walking, jumping, or still** — from smartphone
-accelerometer and gyroscope data. Motion data was recorded solo using the
-Sensor Logger app on an iPhone 14 Pro Max (~100 Hz sampling rate for both
-sensors), 13 trials per activity (52 trials total, 5–10 seconds each).
+Human Activity Recognition (HAR) is important because it is used to figure out a person’s physical activities without any human assistance. However, HAR faces a major problem which is that smartphones often capture messy data that is inconsistent and requires heavy computers to process[1]. In this project, the goal is to track fitness and activity by using smartphone accelerometer and gyroscope measurements to recognise walking, standing, jumping, and still when there is no movement. I used a Hidden Markov Model because it captures the activity as a sequence of hidden states while accounting for temporal dependencies between consecutive observations, allowing noisy sensor predictions to be smoothed into more consistent activity classifications over time. This temporal modeling makes HMMs well suited for improving the reliability of smartphone-based fitness monitoring systems, where activities naturally occur in continuous sequences rather than as isolated events.
 
 The pipeline:
 1. **`src/prepare_dataset.py`** — converts the raw Sensor Logger export
@@ -27,19 +22,19 @@ The pipeline:
 ├── .gitignore
 ├── README.md
 ├── data/
-│   ├── zips_raw/                  # raw Sensor Logger exports (gitignored, local only)
-│   └── processed/                 # 52 clean, labelled per-trial CSVs (committed)
+│   ├── zips_raw/                  
+│   └── processed/                
 │       ├── standing_trial01.csv ... standing_trial13.csv
 │       ├── walking_trial01.csv  ... walking_trial13.csv
 │       ├── jumping_trial01.csv  ... jumping_trial13.csv
 │       ├── still_trial01.csv    ... still_trial13.csv
-│       └── _dataset_summary.csv # per-trial duration / sample-rate summary
-├── notebooks/
-│   └── HAR_HMM_Pipeline.ipynb     # full pipeline, written/run in Google Colab
+│       └── _dataset_summary.csv 
+├── notebook/
+│   └── HAR_HMM_Pipeline.ipynb     
 ├── report/
-│   └── HAR_HMM_Report.pdf         # 4-5 page written report
+│   └── HAR_HMM_Report.pdf        
 └── src/
-    └── prepare_dataset.py         # raw zips -> clean labelled CSVs (run locally)
+    └── prepare_dataset.py         
 ```
 
 ## Dataset
@@ -61,7 +56,7 @@ sample-rate harmonization was needed.
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate        # .venv\Scripts\activate on Windows
+source .venv/bin/activate        
 pip install pandas
 
 python src/prepare_dataset.py --input data/zips_raw --output data/processed
@@ -74,9 +69,7 @@ prints a per-trial summary (row count, duration, sample rate).
 
 1. Upload the `data/processed/` folder to your Google Drive, e.g. to
    `MyDrive/HAR_HMM_Data/processed/`.
-2. Open `notebooks/HAR_HMM_Pipeline.ipynb` in Colab (upload it directly, or
-   open it from GitHub via Colab's "GitHub" tab — either way, no `git
-   clone` runs *inside* the notebook itself).
+2. Open `notebooks/HAR_HMM_Pipeline.ipynb` in Colab 
 3. Run all cells top to bottom. The notebook mounts Google Drive, installs
    `hmmlearn`, and walks through feature extraction, training, decoding,
    and evaluation, with a markdown explanation before each step.
@@ -85,16 +78,4 @@ prints a per-trial summary (row count, duration, sample rate).
 
 ## Results summary
 
-On held-out, unseen test trials (trials 11–13 of every activity), the
-trained model reaches strong separation between activities, with **still**
-the most reliably distinguished class (its low-motion signal is an order of
-magnitude flatter than any handheld activity) and confusions concentrated
-between the higher-motion activities on harder train/test splits. Full
-metrics, confusion matrices, and the transition/emission visualizations are
-in the notebook and the report.
-
-## Notes on the assignment's collaboration rubric criterion
-
-This is an individual submission — there is no group task-allocation table
-because there is no group. The full commit history under this single
-account is the record of all work done.
+I recorded 13 trials for each activity. Trials 1-10 were used for training the model while trials 11-13 were used to test the performance of the model. Therefore, the dataset was split by a whole trial to prevent data leakage. This ensured overlapping windows from the same recording did not appear in both training and test sets. This resulted in a training set of 632 windows from 40 trials and a test set of 200 windows from 12 unseen trials. This shows the ability of the Hidden Markov Model to generalize new recordings.
